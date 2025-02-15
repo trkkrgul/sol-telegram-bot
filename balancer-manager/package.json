@@ -1,0 +1,11 @@
+{
+  "name": "balancer-manager",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "dockerode": "^3.3.5",
+    "dotenv": "^16.4.5",
+    "redis": "^4.7.0"
+  }
+}

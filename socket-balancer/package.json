@@ -1,0 +1,23 @@
+{
+  "name": "socket-balancer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "@solana/spl-token": "^0.4.12",
+    "@solana/web3.js": "^1.98.0",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.5",
+    "redis": "^4.7.0",
+    "uuid": "^9.0.1",
+    "ws": "^8.16.0",
+    "amqplib": "^0.10.3"
+  }
+}
