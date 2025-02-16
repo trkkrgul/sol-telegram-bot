@@ -68,10 +68,6 @@ const campaignSchema = new mongoose.Schema(
         message: '{VALUE} is not a valid number',
       },
     },
-    portalLink: {
-      type: String,
-      default: '',
-    },
   },
   {
     timestamps: true,

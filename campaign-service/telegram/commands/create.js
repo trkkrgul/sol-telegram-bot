@@ -82,13 +82,12 @@ export default function createCommand(bot) {
         const [_, serviceName, productName, price] = data.split(':');
         const groupId = ctx.chat.id.toString();
 
-        // Chat bilgisini geç
+        // Kampanya oluştur
         const campaign = await createCampaign(
           groupId,
           serviceName,
           productName,
-          parseFloat(price),
-          ctx.chat // Chat bilgisini parametre olarak geç
+          parseFloat(price)
         );
 
         // Kampanya durumunu getir

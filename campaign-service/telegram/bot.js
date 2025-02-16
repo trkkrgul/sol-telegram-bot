@@ -3,7 +3,6 @@ import createCommand from './commands/create.js';
 import campaignsCommand from './commands/campaigns.js';
 import meCommand from './commands/me.js';
 import startCommand from './commands/start.js';
-import portalCommand from './commands/portal.js';
 import { publishTransfer } from '../utils/rabbitmq.js';
 import { Campaign } from '../models/Campaign.js';
 
@@ -20,7 +19,6 @@ class TelegramBot {
     createCommand(this.bot);
     campaignsCommand(this.bot);
     meCommand(this.bot);
-    portalCommand(this.bot);
 
     // Transfer callback handler'ını ekle
     this.bot.action(/^transfer:([^:]+):([^:]+)$/, async (ctx) => {

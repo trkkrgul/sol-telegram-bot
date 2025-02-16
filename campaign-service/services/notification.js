@@ -161,7 +161,6 @@ ${ICONS.PROGRESS} Progress: \`${escapeMarkdown(formatNumber(progress))}%\`
         solPrice,
         transferredBalance,
         publicKey,
-        portalLink,
       } = campaign;
 
       // Debug için campaign objesini kontrol edelim
@@ -257,13 +256,6 @@ ${ICONS.SERVICE} Service: \`${escapeMarkdown(serviceName)}\`
 ${ICONS.PRODUCT} Product: \`${escapeMarkdown(productName)}\`
 ${ICONS.PRICE} Price: \`$${escapeMarkdown(formatNumber(productPrice))}\`
 ${ICONS.STATUS} Status: \`pending\`
-${
-  campaign.portalLink
-    ? `\n${ICONS.LINK} Join Group: [Click Here](${escapeMarkdown(
-        campaign.portalLink
-      )})`
-    : ''
-}
 
 ${ICONS.WARNING} This campaign from Group ID: \`${escapeMarkdown(
           groupId

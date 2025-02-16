@@ -225,41 +225,38 @@ export default function campaignsCommand(bot) {
       },
     ]);
 
-    const message = `
-${ICONS.CAMPAIGN} *Campaign Details*
-${ICONS.NEW_TX} Name: \`${escapeMarkdown(campaign.name)}\`
-${ICONS.WALLET} Public Key: [${formatAddress(
-      campaign.publicKey
-    )}](${escapeMarkdown(getSolscanAccountLink(campaign.publicKey))})
-${ICONS.SERVICE} Service: \`${escapeMarkdown(campaign.serviceName)}\`
-${ICONS.PRODUCT} Product: \`${escapeMarkdown(campaign.productName)}\`
-${ICONS.PRICE} Price: \`$${escapeMarkdown(formatNumber(status.productPrice))}\`
-${ICONS.STATUS} Status: \`${escapeMarkdown(status.status)}\`
-
-${ICONS.BALANCE} *Balance Details*
-${ICONS.SOL} SOL: \`${escapeMarkdown(
-      formatNumber(status.SOL, 'SOL')
-    )}\` SOL \\(\\$${escapeMarkdown(
-      formatNumber(status.SOL * status.solPrice)
-    )}\\)
-${ICONS.USDC} USDC: \`\\$${escapeMarkdown(formatNumber(status.USDC))}\`
-${ICONS.TRANSFER} Transferred: \`\\$${escapeMarkdown(
-      formatNumber(status.transferredBalance)
-    )}\`
-${ICONS.VALUE} Total Value: \`\\$${escapeMarkdown(
-      formatNumber(status.accountValue)
-    )}\`
-
-${createProgressBar(status.progress)}
-Progress: \`${escapeMarkdown(formatNumber(status.progress))}\\%\`
-
-${
-  campaign.portalLink
-    ? `\n${ICONS.LINK} Join Group: [Click Here](${escapeMarkdown(
-        campaign.portalLink
-      )})`
-    : ''
-}`;
+    const message =
+      `${ICONS.CAMPAIGN} *Campaign Details*\n\n` +
+      `${ICONS.NEW_TX} Name: \`${escapeMarkdown(status.name)}\`\n` +
+      `${ICONS.WALLET} Public Key: \`${escapeMarkdown(status.publicKey)}\`\n` +
+      `[View Wallet in Solscan](${escapeMarkdown(
+        getSolscanAccountLink(status.publicKey)
+      )})\n` +
+      `${ICONS.SERVICE} Service: \`${escapeMarkdown(status.serviceName)}\`\n` +
+      `${ICONS.PRODUCT} Product: \`${escapeMarkdown(status.productName)}\`\n` +
+      `${ICONS.PRICE} Price: \`$${escapeMarkdown(
+        formatNumber(status.productPrice)
+      )}\`\n` +
+      `${ICONS.STATUS} Status: \`${escapeMarkdown(status.status)}\`\n` +
+      `${ICONS.INITIAL_FUND} Initial Fund: \`$${escapeMarkdown(
+        formatNumber(status.transferredBalance)
+      )}\`\n\n` +
+      `${ICONS.BALANCE} *Current Balance*\n` +
+      `${ICONS.SOL} SOL: \`${escapeMarkdown(
+        formatNumber(status.SOL, 'SOL')
+      )}\` \\(≈ $${escapeMarkdown(
+        formatNumber(status.SOL * status.solPrice)
+      )}\\)\n` +
+      `${ICONS.USDC} USDC: \`$${escapeMarkdown(
+        formatNumber(status.USDC)
+      )}\`\n` +
+      `${ICONS.TOTAL} Total Value: \`$${escapeMarkdown(
+        formatNumber(status.accountValue)
+      )}\`\n\n` +
+      `${ICONS.PROGRESS} Progress: \`${escapeMarkdown(
+        formatNumber(status.progress)
+      )}%\`\n` +
+      `\`${escapeMarkdown(createProgressBar(status.progress, 20))}\``;
 
     await ctx.editMessageText(message, {
       parse_mode: 'MarkdownV2',
