@@ -230,7 +230,7 @@ ${ICONS.CAMPAIGN} *Campaign Details*
 ${ICONS.NEW_TX} Name: \`${escapeMarkdown(campaign.name)}\`
 ${ICONS.WALLET} Public Key: [${formatAddress(
       campaign.publicKey
-    )}](${getSolscanAccountLink(campaign.publicKey)})
+    )}](${escapeMarkdown(getSolscanAccountLink(campaign.publicKey))})
 ${ICONS.SERVICE} Service: \`${escapeMarkdown(campaign.serviceName)}\`
 ${ICONS.PRODUCT} Product: \`${escapeMarkdown(campaign.productName)}\`
 ${ICONS.PRICE} Price: \`$${escapeMarkdown(formatNumber(status.productPrice))}\`
@@ -238,20 +238,20 @@ ${ICONS.STATUS} Status: \`${escapeMarkdown(status.status)}\`
 
 ${ICONS.BALANCE} *Balance Details*
 ${ICONS.SOL} SOL: \`${escapeMarkdown(
-      formatNumber(status.SOL)
-    )} SOL\` \\($${escapeMarkdown(
+      formatNumber(status.SOL, 'SOL')
+    )}\` SOL \\(\\$${escapeMarkdown(
       formatNumber(status.SOL * status.solPrice)
     )}\\)
-${ICONS.USDC} USDC: \`$${escapeMarkdown(formatNumber(status.USDC))}\`
-${ICONS.TRANSFER} Transferred: \`$${escapeMarkdown(
+${ICONS.USDC} USDC: \`\\$${escapeMarkdown(formatNumber(status.USDC))}\`
+${ICONS.TRANSFER} Transferred: \`\\$${escapeMarkdown(
       formatNumber(status.transferredBalance)
     )}\`
-${ICONS.VALUE} Total Value: \`$${escapeMarkdown(
+${ICONS.VALUE} Total Value: \`\\$${escapeMarkdown(
       formatNumber(status.accountValue)
     )}\`
 
 ${createProgressBar(status.progress)}
-Progress: \`${escapeMarkdown(formatNumber(status.progress))}%\`
+Progress: \`${escapeMarkdown(formatNumber(status.progress))}\\%\`
 
 ${
   campaign.portalLink
