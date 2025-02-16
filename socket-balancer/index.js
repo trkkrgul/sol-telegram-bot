@@ -239,7 +239,7 @@ async function main() {
         console.log(
           'WebSocket closed, attempting to reconnect in 5 seconds...'
         );
-        process.exit(0);
+        process.exit(1);
       });
 
       ws.on('error', (error) => {

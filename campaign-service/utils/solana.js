@@ -76,6 +76,7 @@ const parseCampaignStatus = async (address) => {
     productPrice,
     status,
     transferredBalance,
+    publicKey,
   } = campaign;
   const balance = await getBalance(address);
   const { SOL, USDC } = balance;
@@ -102,7 +103,7 @@ const parseCampaignStatus = async (address) => {
         progress,
         solPrice,
         transferredBalance,
-        publicKey: campaign.publicKey,
+        publicKey,
       },
     });
   }
@@ -120,6 +121,7 @@ const parseCampaignStatus = async (address) => {
     accountValue,
     progress,
     solPrice,
+    publicKey,
   };
 };
 
