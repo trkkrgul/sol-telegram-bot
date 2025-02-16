@@ -1,5 +1,5 @@
 export default function startCommand(bot) {
-  bot.command('start', async (ctx) => {
+  bot.command("start", async (ctx) => {
     try {
       const message = `
 🚀 *Welcome to Campaign Manager Bot\\!*
@@ -30,27 +30,27 @@ This bot helps you manage marketing campaigns for various services\\. Here are t
 • Pin important messages
 • Manage campaign status
 
-Need help? Contact @YourSupportUsername`;
+Need help? Contact @threestdio`;
 
       await ctx.replyWithMarkdownV2(message, {
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: '📊 View Campaigns',
-                callback_data: 'c:l:1',
+                text: "📊 View Campaigns",
+                callback_data: "c:l:1",
               },
               {
-                text: '🆕 Create Campaign',
-                callback_data: 'back_to_services',
+                text: "🆕 Create Campaign",
+                callback_data: "back_to_services",
               },
             ],
           ],
         },
       });
     } catch (error) {
-      console.error('Error in start command:', error);
-      await ctx.reply('Error showing start menu');
+      console.error("Error in start command:", error);
+      await ctx.reply("Error showing start menu");
     }
   });
 }

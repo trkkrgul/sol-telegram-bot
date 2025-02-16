@@ -1,27 +1,27 @@
-import axios from 'axios';
-import { headers } from '../config.js';
-import dotenv from 'dotenv';
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import axios from "axios";
+import { headers } from "../config.js";
+import dotenv from "dotenv";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
   getAssociatedTokenAddressSync,
   TOKEN_PROGRAM_ID,
   ASSOCIATED_TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
-import { PublicKey, Keypair } from '@solana/web3.js';
-import { redisClient } from './redis.js';
-import { Campaign } from '../models/Campaign.js';
-import bs58 from 'bs58';
-import { publishMessage } from './rabbitmq.js';
-import { Portal } from '../models/Portal.js';
+} from "@solana/spl-token";
+import { PublicKey, Keypair } from "@solana/web3.js";
+import { redisClient } from "./redis.js";
+import { Campaign } from "../models/Campaign.js";
+import bs58 from "bs58";
+import { publishMessage } from "./rabbitmq.js";
+import { Portal } from "../models/Portal.js";
 dotenv.config();
 
 const { SOLANA_RPC_HTTP, USDC_MINT } = process.env;
 
 const getSOLBalance = async (address) => {
   const payload = {
-    jsonrpc: '2.0',
-    method: 'getBalance',
-    params: [address, { commitment: 'confirmed' }],
+    jsonrpc: "2.0",
+    method: "getBalance",
+    params: [address, { commitment: "confirmed" }],
     id: 1,
   };
 
@@ -45,9 +45,9 @@ const getUSDCBalance = async (address) => {
   }
   if (!ata) return 0;
   const payload = {
-    jsonrpc: '2.0',
-    method: 'getTokenAccountBalance',
-    params: [ata, { commitment: 'confirmed' }],
+    jsonrpc: "2.0",
+    method: "getTokenAccountBalance",
+    params: [ata, { commitment: "confirmed" }],
     id: 1,
   };
 
@@ -66,8 +66,8 @@ const getBalance = async (address) => {
 
 const parseCampaignStatus = async (address) => {
   const campaign = await Campaign.findOne({ publicKey: address });
-  if (!campaign) throw new Error('Campaign not found');
-  const price = await redisClient.get('prices');
+  if (!campaign) throw new Error("Campaign not found");
+  const price = await redisClient.get("prices");
   const { SOL: solPrice } = JSON.parse(price);
   const {
     name,
@@ -83,13 +83,13 @@ const parseCampaignStatus = async (address) => {
   const accountValue = SOL * solPrice + USDC + parseFloat(transferredBalance);
   const progress = (accountValue / productPrice) * 100;
 
-  if (status === 'active' && progress >= 100) {
-    campaign.status = 'pending';
+  if (status === "active" && progress >= 100) {
+    campaign.status = "pending";
     await campaign.save();
 
     // Target reached mesajını RabbitMQ'ya gönder
-    await publishMessage('campaign_notifications', {
-      type: 'target_reached',
+    await publishMessage("campaign_notifications", {
+      type: "target_reached",
       data: {
         _id: campaign._id,
         name,
@@ -137,18 +137,18 @@ const parseCampaignTransaction = async (transfer) => {
   } = transfer;
 
   // Debug için transfer objesini kontrol edelim
-  console.log('Transfer object:', {
+  console.log("Transfer object:", {
     publicKey,
     signer,
     transactionHash,
     currency,
   });
 
-  if (!notify) throw new Error('No need to notify');
+  if (!notify) throw new Error("No need to notify");
   const campaign = await Campaign.findOne({ publicKey });
-  if (!campaign) throw new Error('Campaign not found');
+  if (!campaign) throw new Error("Campaign not found");
 
-  const { SOL: solPrice } = JSON.parse(await redisClient.get('prices'));
+  const { SOL: solPrice } = JSON.parse(await redisClient.get("prices"));
   const {
     name,
     groupId,
@@ -162,12 +162,12 @@ const parseCampaignTransaction = async (transfer) => {
   const accountValue = SOL * solPrice + USDC + parseFloat(transferredBalance);
   const progress = (accountValue / productPrice) * 100;
 
-  if (status === 'active' && progress >= 100) {
-    await Campaign.updateOne({ publicKey }, { status: 'pending' });
+  if (status === "active" && progress >= 100) {
+    await Campaign.updateOne({ publicKey }, { status: "pending" });
 
     // Target reached mesajını RabbitMQ'ya gönder
-    await publishMessage('campaign_notifications', {
-      type: 'target_reached',
+    await publishMessage("campaign_notifications", {
+      type: "target_reached",
       data: {
         _id: campaign._id,
         name,
@@ -216,13 +216,13 @@ const createCampaign = async (
 ) => {
   try {
     if (!groupId || !serviceName || !productName || !price) {
-      throw new Error('Invalid campaign data');
+      throw new Error("Invalid campaign data");
     }
     const keypair = Keypair.generate();
 
     // Portal linkini bul veya grup username'ini kullan
     const portal = await Portal.findOne({ groupId });
-    let portalLink = portal?.portalLink || '';
+    let portalLink = portal?.portalLink || "";
 
     // Eğer portal link yoksa ve chat bilgisi varsa, grup linkini kullan
     if (!portalLink && chat?.username) {
@@ -237,15 +237,15 @@ const createCampaign = async (
       groupId,
       serviceName,
       productName,
-      productPrice: price,
-      status: 'active',
+      productPrice: price * 1.1,
+      status: "active",
       portalLink,
     });
 
     await campaign.save();
     return campaign;
   } catch (error) {
-    console.error('Error creating campaign:', error);
+    console.error("Error creating campaign:", error);
     throw error;
   }
 };
@@ -253,19 +253,19 @@ const createCampaign = async (
 const transferBiassedBalance = async (fromPublicKey, toPublicKey) => {
   const prevCampaign = await Campaign.findOne({
     publicKey: fromPublicKey,
-    status: 'active',
+    status: "active",
   });
 
   const newCampaign = await Campaign.findOne({
     publicKey: toPublicKey,
-    status: 'active',
+    status: "active",
   });
 
   if (!prevCampaign || !newCampaign) {
-    throw new Error('Campaign not found');
+    throw new Error("Campaign not found");
   }
 
-  const prices = await redisClient.get('prices');
+  const prices = await redisClient.get("prices");
   const { SOL: solPrice } = JSON.parse(prices);
   const { SOL: prevSolBalance, USDC: prevUsdcBalance } = await getBalance(
     prevCampaign.publicKey
@@ -278,7 +278,7 @@ const transferBiassedBalance = async (fromPublicKey, toPublicKey) => {
 
   console.log({ prevValue, prevSolBalance, prevUsdcBalance, solPrice });
   prevCampaign.transferredBalance = 0;
-  prevCampaign.status = 'cancelled';
+  prevCampaign.status = "cancelled";
 
   newCampaign.transferredBalance = prevValue;
 
@@ -288,10 +288,10 @@ const transferBiassedBalance = async (fromPublicKey, toPublicKey) => {
 const cancelCampaign = async (publicKey) => {
   const campaign = await Campaign.findOne({
     publicKey,
-    status: 'active',
+    status: "active",
   });
-  if (!campaign) throw new Error('Campaign not found');
-  campaign.status = 'cancelled';
+  if (!campaign) throw new Error("Campaign not found");
+  campaign.status = "cancelled";
   await campaign.save();
 };
 
