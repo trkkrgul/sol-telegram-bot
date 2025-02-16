@@ -211,6 +211,28 @@ async function main() {
         processMap.clear();
         // Sonra tüm cüzdanları yeniden subscribe et
         await updateWallets();
+
+        // Add ping interval
+        const pingInterval = setInterval(() => {
+          if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(
+              JSON.stringify({
+                jsonrpc: '2.0',
+                method: 'ping',
+                id: generateUUID(),
+              })
+            );
+            console.log('Ping sent to WebSocket server');
+          } else {
+            clearInterval(pingInterval);
+            console.log('WebSocket not connected, clearing ping interval');
+          }
+        }, 120000); // 2 minutes = 120000 ms
+
+        // Clear interval when connection closes
+        ws.on('close', () => {
+          clearInterval(pingInterval);
+        });
       });
 
       ws.on('close', () => {
