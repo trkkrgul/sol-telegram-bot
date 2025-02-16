@@ -217,7 +217,7 @@ async function main() {
         console.log(
           'WebSocket closed, attempting to reconnect in 5 seconds...'
         );
-        setTimeout(setupWebSocket, 5000);
+        process.exit(1);
       });
 
       ws.on('error', (error) => {
